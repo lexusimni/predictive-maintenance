@@ -13,8 +13,11 @@ A real-world predictive maintenance system built using industrial sensor data, a
 ### 🧠 Top 10 XGBoost Features
 ![Top 10 XGBoost Features](outputs/feature_importance.png)
 
-### 🎯 Confusion Matrix
-![Confusion Matrix](outputs/confusion_matrix.png)
+### 📊 ROC Curve
+![ROC Curve](outputs/roc_curve.png)
+
+### 🤖 Model Comparison
+![Model Comparison](outputs/model_comparison.png)
 
 ---
 
