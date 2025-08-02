@@ -23,21 +23,29 @@ A real-world predictive maintenance system built using industrial sensor data, a
 
 ## 📖 Detailed Project Walkthrough
 
-This project simulates a **real-world predictive maintenance scenario**, where we’re given sensor readings from machines and asked to **predict future failures**.
+This project simulates a **real-world predictive maintenance scenario**, where we’re given historical sensor readings from industrial machines and asked to **predict if a machine is at risk of failure**.
 
 ---
 
 ### 🧼 Step 1: Data Understanding & Cleaning
 
+We began by loading a dataset containing **10,000 machine records**, each with:
+
+* Continuous sensor readings (temperature, torque, speed, etc.)
+* A machine type
+* A binary target column (`Target`), indicating if a failure occurred
 * Dataset: `10,000` machine logs with real-time telemetry and status flags
 * Dropped identifiers (`UDI`, `Product ID`) to avoid leakage
 * One-hot encoded `Type` column (machine type)
 * Converted all object features to numerical or categorical
 * Target: `Target` column indicating failure (binary classification)
 
+We inspected all columns for missing values, incorrect types, or irrelevant data. Two identifier columns (`UDI`, `Product ID`) were dropped to prevent data leakage. One-hot encoding was used to convert the `Type` column into numeric format.
+
 ---
 
 ### 📊 Step 2: Exploratory Data Analysis (EDA)
+* We explored trends and correlations:
 
 * ⚠️ **Highly imbalanced** data (\~2% failure rate), mimicking real industry conditions
 * 🧩 `Failure Type` mostly `"No Failure"` → confirmed that `Target` is the modeling label
@@ -46,6 +54,15 @@ This project simulates a **real-world predictive maintenance scenario**, where w
   * `Tool Wear`, `Torque`, and `Speed` positively correlated with failure
   * `Air Temp` ↔ `Process Temp` showed multicollinearity
 * 🔍 Outlier inspection revealed high-risk wear patterns on failing machines
+
+
+- The **target variable was extremely imbalanced** (~2% failures), which mirrors real-world industrial settings where most machines operate normally.
+- **Failure Type** was often `"No Failure"`, reinforcing that `Target` was the correct column to model.
+- Using a **correlation heatmap**, we found that:
+  - `Torque` and `Tool Wear` had moderately strong positive correlation with failures.
+  - `Air temperature` and `Process temperature` were highly correlated with each other, possibly due to environmental factors.
+
+**Key takeaway:** There are multiple sensor features with predictive potential, and some may interact.
 
 ---
 
@@ -67,11 +84,15 @@ Used **XGBoostClassifier** — ideal for tabular + imbalanced data
 
 ### 🧠 Step 4: Model Explainability (SHAP)
 
-SHAP (SHapley Additive exPlanations) was used to interpret the model:
+We applied **SHAP values** to explain which features drove model predictions.
 
-* `Tool Wear`, `Torque`, and `Rotational Speed` were the **most influential features**
-* SHAP values showed that **higher tool wear** strongly pushes the model to predict failure
-* Categorical encodings (machine `Type`) had minor but consistent influence
+The SHAP bar plot revealed:
+
+- `Tool Wear`, `Torque`, and `Rotational Speed` were **the most influential** in predicting failure.
+- `Tool Wear` consistently pushed predictions toward "Failure", especially at higher values.
+- Some `Type` encodings (i.e., machine types) had small but consistent influence.
+
+This aligned with domain intuition — machines that spin faster or operate under higher torque or longer wear time tend to break down.
 
 ---
 
@@ -79,10 +100,11 @@ SHAP (SHapley Additive exPlanations) was used to interpret the model:
 
 📌 **Engineering Takeaways**:
 
-* Set preventive thresholds for `Tool Wear` & `Torque`
 * Enable real-time dashboards using SHAP to show *why* a machine was flagged
-* Different machine types may require tailored maintenance cycles
-* Flag borderline cases early to prevent false negatives
+* **Preventive Thresholding**: Monitoring `Tool Wear` and `Torque` over time and triggering alerts at certain thresholds can help prevent unexpected breakdowns.
+* **Custom Maintenance per Machine Type**: Some types may need more frequent servicing depending on failure association.
+* **Feature Monitoring**: Incorporating SHAP explanations into dashboards can help operators understand *why* a machine was flagged.
+
 
 ---
 
@@ -130,8 +152,6 @@ This project shows I can design trustworthy, interpretable models ready for prod
 ---
 
 ## 👩🏽‍💻 About Me
-
-I'm **Alexus Glass**, a software engineer and aspiring data scientist pursuing admission into Georgia Tech’s Master’s in Data Science.
 
 * 🧠 Strong foundation in **Python, Machine Learning, and Data Visualization**
 * 🛠️ Building a portfolio of 15+ professional-grade projects
