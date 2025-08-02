@@ -6,11 +6,15 @@ A real-world predictive maintenance system built using industrial sensor data, a
 
 ## 📈 Project Snapshots
 
+
 ### 🔍 SHAP Feature Importance
+![SHAP Feature Importance](outputs/shap_summary_bar.png)
 
 ### 🧠 Top 10 XGBoost Features
+![Top 10 XGBoost Features](outputs/feature_importance.png)
 
 ### 🎯 Confusion Matrix
+![Confusion Matrix](outputs/confusion_matrix.png)
 
 ---
 
